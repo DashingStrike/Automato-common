@@ -149,8 +149,8 @@ function findAllText(text, window, flag)
   end
 
   for i=1,#windowList do
-    local current = makeBox(windowList[i].x + 4, windowList[i].y + 3,
-			    windowList[i].width - 8, windowList[i].height - 6);
+    local current = makeBox(windowList[i].x + 7, windowList[i].y + 4,
+			    windowList[i].width - 12, windowList[i].height - 7);
     if not nopin then
       current = makeBox(current.x, current.y,
 			current.width - 20, current.height);
