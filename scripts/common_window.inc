@@ -190,7 +190,7 @@ end
 -- waterGap (optional) -- leave a gap at the top for getting water
 -------------------------------------------------------------------------------
 
-function arrangeStashed(cascade, waterGap)
+function arrangeStashed(cascade, waterGap, varWidth, varHeight)
   local screen = srGetWindowSize();
   local bottomRightX = screen[0] - 20;
   local bottomRightY = screen[1] - 20;
@@ -212,25 +212,35 @@ function arrangeStashed(cascade, waterGap)
     lsSleep(click_delay);
     srReadScreen();
     local bounds = srGetWindowBorders(window[0], window[1]);
-    local width = bounds[2] - bounds[0];
-    local height = bounds[3] - bounds[1];
+    local width, height;
+    if not varWidth then
+      width = bounds[2] - bounds[0];
+    else
+      width = varWidth;
+    end
+    if not varHeight then
+      height = bounds[3] - bounds[1];
+    else
+      height = varHeight;
+    end
+    
     if cascade then
       if currentY + height >= screen[1] then
-	currentX = currentX + xMax;
-	currentY = 0;
-	xMax = 0;
+        currentX = currentX + xMax;
+        currentY = 0;
+        xMax = 0;
       end
       if currentX + width >= screen[0] then
-	error("Cannot arrange these windows into a cascade.");
+        error("Cannot arrange these windows into a cascade.");
       end
     else
       if currentX + width >= screen[0] then
-	currentX = 0;
-	currentY = currentY + yMax;
-	yMax = 0;
+        currentX = 0;
+        currentY = currentY + yMax;
+        yMax = 0;
       end
       if currentY + height >= screen[1] then
-	error("Cannot arrange these windows into a grid.");
+        error("Cannot arrange these windows into a grid.");
       end
     end
     lastX = window[0] - bounds[0] + currentX;
@@ -291,6 +301,25 @@ function closeAllWindows(x, y, width, height)
 	sleepWithStatus(200, "Closing Windows");
 	srReadScreen();
 	images = findAllImagesInRange(image, x, y, width, height);
+      end
+    end
+  end
+end
+
+-------------------------------------------------------------------------------
+-- closeEmptyRegions()
+--
+-- Closes all empty windows on the screen
+--
+-------------------------------------------------------------------------------
+
+function closeEmptyRegions()
+  allRegs = findAllTextRegions();
+  if allRegs then
+    for i = 1, #allRegs do
+      local p = parseRegion(allRegs[i]);
+      if p == nil then
+        unpinRegion(allRegs[i]);
       end
     end
   end
@@ -441,6 +470,21 @@ function unpinManager(title, message)
     end
     lsDoFrame();
     lsSleep(tick_delay);
+  end
+end
+
+-------------------------------------------------------------------------------
+-- unpinRegion(region)
+--
+-- Unpins a region
+--
+-- region - region object to unpin
+-------------------------------------------------------------------------------
+
+function unpinRegion(region)
+  if region then
+    lsPrintln("Unpinning at: " .. region[0] + region[2] - 15 .. ", " .. region[1] + region[3] + 15);
+    safeClick(region[0] + region[2] - 15, region[1] + 15, 0);
   end
 end
 

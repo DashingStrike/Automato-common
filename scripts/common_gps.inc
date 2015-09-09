@@ -1,45 +1,22 @@
+-----------------------------------------------------------
+-- findCoords()
+--
+-- returns a Point object containing the current x and y
+-- coordinates. Use this over fastFindCoords, which is
+-- misnamed and is oddly significantly slower.
+----------------------------------------------------------
 function findCoords()
-  lsPrintln("findCoords");
   local result = nil;
   local anchor = findText("Year");
-  if(not anchor) then
-    anchor = findText("ar 1");
-  end
-  if(not anchor) then
-    anchor = findText("ar 2");
-  end
-  if(not anchor) then
-    anchor = findText("ar 3");
-  end
-  if(not anchor) then
-    anchor = findText("ar 4");
-  end
-  if(not anchor) then
-    anchor = findText("ar 5");
-  end
-  if(not anchor) then
-    anchor = findText("ar 6");
-  end
-  if(not anchor) then
-    anchor = findText("ar 7");
-  end
-  if(not anchor) then
-    anchor = findText("ar 8");
-  end
-  if(not anchor) then
-    anchor = findText("ar 9");
-  end
-
 
   if anchor then
-    lsPrintln("anchor");
     local window = getWindowBorders(anchor[0], anchor[1]);
     local lines = findAllText(nil, window, NOPIN);
-    for i=1,#lines do
-      lsPrintln("LINE " .. i .. " : " .. table.concat(lines[i], ","));
-    end
+--    for i=1,#lines do
+--      lsPrintln("LINE " .. i .. " : " .. table.concat(lines[i], ","));
+--    end
     local str = lines[#lines][2];
-    lsPrintln("lines: " .. str);
+--    lsPrintln("lines: " .. str);
     local a, b, x, y = string.find(str, ": ([0-9-]+)\, ([0-9-]+)");
     result = makePoint(tonumber(x), tonumber(y));
     if not result[0] or not result[1] then
@@ -124,6 +101,12 @@ local ffc_coordsPos = nil;
 local ffc_dash = -1;
 local ffc_comma = -2;
 
+------------------------------------------------------------------------------------
+-- fastFindCoords()
+--
+-- DEPRECATED. Less reliable and nearly 10x slower than findCoords().
+-- Use findCoords() instead. Returns the current coordinates as a Point object.
+------------------------------------------------------------------------------------
 function fastFindCoords()
 	local pos;
 	if(not ffc_coordsPos) then
@@ -131,17 +114,21 @@ function fastFindCoords()
 		if(not pos) then
 			pos = findText("Year");
 			if(not pos) then
-				pos = findText("2, ");
-				if(not pos) then
-					pos = findText("3, ");
-					if(not pos) then
-						lsPrintln("fastFindCoords() : Can't find the clock");
-						return nil;
+				for i=1,9 do
+					pos = findText("ar " .. i .. ", ");
+					if(pos) then
+						break
 					end
+				end
+				
+				if(not pos) then
+					lsPrintln("fastFindCoords() : Can't find the clock");
+					return nil;
 				end
 			end
 		end
 		local window = getWindowBorders(pos[0], pos[1]);
+    srReadScreen(); -- required due to image search functions after a potential text search.
 		window.top = window.top + 13;
 		window.y = window.y + 13;
 		window.height = window.height - 13;
@@ -172,6 +159,11 @@ function fastFindCoords()
 	return nil;
 end
 
+-----------------------------------------------------------------------------
+-- ffc_parseDigits(digits)
+--
+-- Helper function for fastFindCoords(). Deprecated.
+-----------------------------------------------------------------------------
 function ffc_parseDigits(digits)
 	local x;
 	local pos;
@@ -190,6 +182,11 @@ function ffc_parseDigits(digits)
 	return makePoint(x,y);
 end
 
+-------------------------------------------------------------------------------
+-- ffc_parseOneCoord(digits, pos)
+--
+-- Helper function for fastFindCoords(). Deprecated.
+------------------------------------------------------------------------------
 function ffc_parseOneCoord(digits,pos)
 	if(pos == nil) then
 		pos = 1;
@@ -220,6 +217,11 @@ function ffc_parseOneCoord(digits,pos)
 	return val, #digits+1;
 end
 
+-----------------------------------------------------------------------------
+-- ffc_readDigits(box)
+--
+-- Helper function for fastFindCoords(). DEPRECATED.
+-----------------------------------------------------------------------------
 function ffc_readDigits(box)
 	local digits = {};
 	local i;
@@ -255,6 +257,11 @@ function ffc_readDigits(box)
 	return digits;
 end
 
+-----------------------------------------------------------------------------
+-- ffc_compareDigits(left,right)
+--
+-- Helper function for fastFindCoords(). DEPRECATED.
+-----------------------------------------------------------------------------
 function ffc_compareDigits(left,right)
 	if(left[1] < right[1]) then
 		return true;

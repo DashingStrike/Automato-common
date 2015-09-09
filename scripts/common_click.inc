@@ -264,18 +264,24 @@ function drawWater()
 end
 
 ------------------------------------------------------------------------------
--- clickText(parse)
+-- clickText(parse, safe)
 --
 -- convenient wrapper to click on text 20, 7 pixels in from where the top
 -- left of the parse object
 -- parse - parse object which we're clicking
---
+-- safe - Set to false if you want to do an unsafe click
 -- always returns nil
 ------------------------------------------------------------------------------
 
-function clickText(parse)
-	srClickMouseNoMove(parse[0] + 20, parse[1] + 7);
-	lsSleep(per_click_delay);
+function clickText(parse, safe)
+  if parse then
+    if safe and safe ~= false then
+      safeClick(parse[0] + 20, parse[1] + 7, 0);
+    else
+      srClickMouseNoMove(parse[0] + 20, parse[1] + 7);
+      lsSleep(per_click_delay);
+    end
+  end
 end
 
 -------------------------------------------------------------------------------

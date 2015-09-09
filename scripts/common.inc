@@ -50,7 +50,8 @@ end
 -------------------------------------------------------------------------------
 
 function makePoint(x, y)
-  if not x or not y then
+  if x == nil or y == nil then
+    print(debug.traceback());
     error("Incorrect number of arguments for makePoint()");
   end
   local result = {};
