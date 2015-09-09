@@ -111,5 +111,5 @@ end
 -------------------------------------------------------------------------------
 
 function findInventoryRegion()
-  return regionToBox(srFindInventoryRegion());
+  return regionToBox(srFindInvRegion());
 end
