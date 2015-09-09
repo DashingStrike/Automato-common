@@ -5,8 +5,10 @@
 -- Intentionally does not find regions where a corner is covered up.
 --
 -- Returns an array of region objects on success, nil if no regions are found.
+-- DEPRECATED. Use findText or findAllText instead.
 -------------------------------------------------------------------------------
 function findAllTextRegions()
+  lsPrintln("findAllTextRegions is deprecated. Do not call this anymore");
 	local xyWindowSize = srGetWindowSize();
 	local y = 0;
 	local buttons = {};
@@ -24,7 +26,7 @@ function findAllTextRegions()
 	end
 	local i;
 	for i = 1, #buttons do
-		buttons[i][0] = buttons[i][0] + 4;
+		buttons[i][0] = buttons[i][0] + 1;
 		buttons[i][1] = buttons[i][1] + 1;
 		buttons[i][2] = buttons[i][2] - 30;
 		buttons[i][3] = buttons[i][3] - 2;
@@ -33,7 +35,7 @@ function findAllTextRegions()
 end
 
 -------------------------------------------------------------------------------
--- findText(text, isExact)
+-- findTextOld(text, isExact)
 --
 -- Searches for the specified text in normal papyrus regions.  Intentionally
 -- does not check the inventory region and chat regions.  if isExact is true,
@@ -45,9 +47,11 @@ end
 -- Returns a parse object containing the entire line of text that the text
 -- object was found within. findText("Wood (") for instance will return
 -- "Wood (154)" if done on a chest with 154 wood.
+-- DEPRECATED. use findText() instead.
 -------------------------------------------------------------------------------
 
 function findTextOld(text, isExact)
+  lsPrintln("findtextOld IS DEPRECATED. use findText() instead");
 	if text == nil then
 		error "No text specified to find";
 	end
@@ -102,7 +106,7 @@ end
 
 function parseRegion(region)
 	if region then
-		return parseText(region[0], region[1], region[2], region[3]);
+    return parseText(region[0], region[1], region[2], region[3]);
 	end
 end
 
@@ -117,8 +121,10 @@ end
 -- the exact text specified
 --
 -- returns the parse object containing the desired text.
+-- DEPRECATED. use findText() instead.
 -------------------------------------------------------------------------------
 function findTextInRegion(region, text, isExact)
+  lsPrintln("findTextInRegion IS DEPRECATED. use findText instead");
 	if region then
 		stripRegion(region);
 		local table = parseRegion(region);
@@ -182,8 +188,10 @@ end
 -- the exact text specified
 --
 -- returns an array of region objects, all of which contained the desired text.
+-- DEPRECATED. use findAllText() instead.
 -------------------------------------------------------------------------------
 function findAllRegionsWithText(text, isExact)
+  lsPrintln("findAllRegionsWithText IS DEPRECATED! Use findAllText() instead");
 	local r1 = findAllTextRegions();
 	local count = 0;
 	local r2 = {}
@@ -214,20 +222,10 @@ end
 
 function getChatText()
 	local creg = srFindChatRegion();
+  -- The below line is a hack introduced for T7 to handle the fact that
+  -- there isn't as much of a buffer below chat as there was in T6 and prior.
+  creg[3] = creg[3] + 1;
 	stripRegion(creg);
-	local lreg = {};
-	if creg then
-		local w = creg[2];
-		if creg[2] > 600 then
-			creg[0] = creg[0] + 106;
-			creg[2] = creg[2] - 106;
-		else
-			creg[0] = creg[0] + w/6 + 6;
-			creg[2] = creg[2] - w/6 - 6;
-		end
-	else
-		return nil;
-	end
 	local p = parseRegion(creg);
 	local count = 1;
 	local first = nil;
@@ -260,9 +258,10 @@ end
 -------------------------------------------------------------------------------
 -- getAllText()
 --
--- finds all the text on the screen.  May need depreciation.
+-- finds all the text on the screen.  May need deprecation.
 --
 -- returns an array of parse objects of every item on the screen.
+-- Generally only useful for debug
 -------------------------------------------------------------------------------
 
 function getAllText()
@@ -300,9 +299,11 @@ end
 -- the exact text specified
 --
 -- returns the first region object containing the desired text
+-- DEPRECATED. use findText() instead.
 -------------------------------------------------------------------------------
 
 function findRegionWithText(text, isExact)
+  lsPrintln("findRegionWithText IS DEPRECATED! use findText() instead");
 	f = findAllTextRegions();
 	local i;
 	if f then
