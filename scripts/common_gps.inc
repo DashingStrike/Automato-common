@@ -28,25 +28,30 @@ function findCoords()
 end
 
 function walkTo(dest)
+  srReadScreen();
   local coords = findCoords();
   while coords[0] ~= dest[0] or coords[1] ~= dest[1] do
     while coords[0] < dest[0] do
       stepTo(makePoint(1, 0));
+      srReadScreen();
       coords = findCoords();
       checkBreak();
     end
     while coords[0] > dest[0] do
       stepTo(makePoint(-1, 0));
+      srReadScreen();
       coords = findCoords();
       checkBreak();
     end
     while coords[1] < dest[1] do
       stepTo(makePoint(0, -1));
+      srReadScreen();
       coords = findCoords();
       checkBreak();
     end
     while coords[1] > dest[1] do
       stepTo(makePoint(0, 1));
+      srReadScreen();
       coords = findCoords();
       checkBreak();
     end
