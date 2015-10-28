@@ -504,3 +504,42 @@ function unpinOnExit(f)
   local status, error = pcall(f);
   unpinManager("Complete", error);
 end
+
+-------------------------------------------------------------------------------
+-- closeEmptyAndErrorWindows()
+--
+-- Closes all empty windows and error windows on the screen
+--
+-------------------------------------------------------------------------------
+
+function closeEmptyAndErrorWindows()
+  local windows = findAllWindows();
+  local closed = 0;
+  if windows then
+    for i = 1, #windows do
+      temp = makeBox(windows[i].x + 7, windows[i].y + 4, 
+          windows[i].width -35, windows[i].height - 7);
+      p = parseWindow(temp);
+      
+      if #p == 0 then
+        unpinWindow(windows[i]);
+        closed = closed + 1;
+      end
+    end
+  end
+  return closed;
+end
+
+-------------------------------------------------------------------------------
+-- unpinWindow(window)
+--
+-- Unpins a window
+--
+-- window - window object to unpin
+-------------------------------------------------------------------------------
+
+function unpinWindow(window)
+  if window then
+    safeClick(window.x + window.width - 15, window.y + 15, 0);
+  end
+end
