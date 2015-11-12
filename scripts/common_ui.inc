@@ -364,3 +364,41 @@ function getElapsedTime(startTime)
 	local seconds = duration - hours * 60 * 60 - minutes * 60;
 	return string.format("%02d:%02d:%02d",hours,minutes,seconds);
 end
+
+GENERALCAM = 5; -- f5 view
+EXPLORERCAM = 6; -- f6 view
+BUILDERCAM = 7; -- f7 view
+DUELINGCAM = 8; -- f8 view
+CARTOGRAPHERCAM = 100; -- f8f8 view
+CARTOGRAPHER2CAM = 101; -- zoomed in f8f8 view
+-------------------------------------------------------------------------------
+-- setCameraView(viewName)
+--
+-- Sets the camera view
+--
+-- viewName - Constant representing the name of the view. Defaults to zoomed
+-- in cartographer's view.
+-------------------------------------------------------------------------------
+
+-- This works by going to an alternate view than the ideal view using the F
+-- keys, and then going to the ideal view.
+function setCameraView(viewName)
+   if viewName == nil then
+      error("No camera view specified");
+   end
+   if viewName == GENERALCAM then
+      srFunctionKeyEvent(6);
+      srFunctionKeyEvent(5);
+      return;
+   end
+   srFunctionKeyEvent(5);
+   if viewName ~= CARTOGRAPHERCAM and viewName ~= CARTOGRAPHER2CAM then
+      srFunctionKeyEvent(viewName);
+   else
+      srFunctionKeyEvent(8);
+      srFunctionKeyEvent(8);
+      if viewName == CARTOGRAPHER2CAM then
+         srFunctionKeyEvent(8);
+      end
+   end
+end
