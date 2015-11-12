@@ -35,51 +35,6 @@ function findAllTextRegions()
 end
 
 -------------------------------------------------------------------------------
--- findTextOld(text, isExact)
---
--- Searches for the specified text in normal papyrus regions.  Intentionally
--- does not check the inventory region and chat regions.  if isExact is true,
--- then looks for the exact text specified.
---
--- text - text to search for
--- isExact (optional) - true if trying to find the exact text
---
--- Returns a parse object containing the entire line of text that the text
--- object was found within. findText("Wood (") for instance will return
--- "Wood (154)" if done on a chest with 154 wood.
--- DEPRECATED. use findText() instead.
--------------------------------------------------------------------------------
-
-function findTextOld(text, isExact)
-  lsPrintln("findtextOld IS DEPRECATED. use findText() instead");
-	if text == nil then
-		error "No text specified to find";
-	end
-	local regions = findAllTextRegions();
-	local table;
-	if regions then
-		for i = 1, #regions, 1 do
-			stripRegion(regions[i]);
-			table = parseRegion(regions[i]);
-			if table then
-				for j = 1, #table, 1 do
-					if isExact and isExact == true then
-						if table[j][2] == text then
-							return table[j];
-						end
-					--Search all text within that block for the goal text
-					else
-						if string.find(table[j][2], text, 1, true) ~= nil then
-							return table[j];
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
--------------------------------------------------------------------------------
 -- stripRegion(region)
 --
 -- Strips a region of all background color.  Recommended to call only from
@@ -111,106 +66,6 @@ function parseRegion(region)
 end
 
 -------------------------------------------------------------------------------
--- findTextInRegion(region, text, isExact)
---
--- searches for the parse object containing the desired text in the specified
--- region
--- region - region which we're searching for the text in.
--- text - text we're looking for
--- isExact (optional) - true if we want to return true only if the line contains
--- the exact text specified
---
--- returns the parse object containing the desired text.
--- DEPRECATED. use findText() instead.
--------------------------------------------------------------------------------
-function findTextInRegion(region, text, isExact)
-  lsPrintln("findTextInRegion IS DEPRECATED. use findText instead");
-	if region then
-		stripRegion(region);
-		local table = parseRegion(region);
-		local j;
-		if table then
-			for j = 1, #table do
-				local p = findTextInParse(table, text, isExact);
-				if p then
-					return p;
-				end
-			end
-		end
-	end
-end
-
--------------------------------------------------------------------------------
--- findTextInParse(parseData, text, isExact)
---
--- Honestly, this probably needs depreciation, I'm not sure when you would call
--- this instead of findText, or findTextInRegion
--------------------------------------------------------------------------------
-
-function findTextInParse(parseData, text, isExact)
-	if text == nil then
-		error "No text specified to find";
-	end
-	if parseData then
-		for i = 1, #parseData, 1 do
-			if isExact and isExact == true then
-				if parsedata[i][2] == text then
-					local t;
-					t = {};
-					t[0] = parseData[i][0];
-					t[1] = parseData[i][1];
-					t[2] = parseData[i][2];
-					return t;
-				end
-			else
-				if string.find(parseData[i][2], text, 1, true) then
-					local t;
-					t = {};
-					t[0] = parseData[i][0];
-					t[1] = parseData[i][1];
-					t[2] = parseData[i][2];
-					return t;
-				end
-			end
-		end
-	end
-	return nil;
-end
-
--------------------------------------------------------------------------------
--- findAllRegionsWithText(text, isExact)
---
--- Searches all regions on the screen for desired text.  Useful for times when
--- you want to find all of a certain type of window, but click other buttons
--- within that window, such as chemistry labs.
--- text - text we're looking for
--- isExact (optional) - true if we want to return true only if the line contains
--- the exact text specified
---
--- returns an array of region objects, all of which contained the desired text.
--- DEPRECATED. use findAllText() instead.
--------------------------------------------------------------------------------
-function findAllRegionsWithText(text, isExact)
-  lsPrintln("findAllRegionsWithText IS DEPRECATED! Use findAllText() instead");
-	local r1 = findAllTextRegions();
-	local count = 0;
-	local r2 = {}
-	if r1 then
-		local i;
-		for i = 1, #r1 do
-			if findTextInRegion(r1[i], text, isExact) then
-				r2[count + 1] = r1[i];
-				count = count + 1;
-			end
-		end
-	end
-	if count == 0 then
-		return nil;
-	end
-	return r2;
-end
-
--------------------------------------------------------------------------------
 -- getChatText()
 --
 -- Reads the chat screen and finds all the text on it.
@@ -224,7 +79,7 @@ function getChatText()
 	local creg = srFindChatRegion();
   -- The below line is a hack introduced for T7 to handle the fact that
   -- there isn't as much of a buffer below chat as there was in T6 and prior.
-  creg[3] = creg[3] + 1;
+   creg[3] = creg[3] + 1;
 	stripRegion(creg);
 	local p = parseRegion(creg);
 	local count = 1;
@@ -339,4 +194,22 @@ function parseText(x, y, w, h)
 		newTable[i][2] = table[(i-1)*3+2];
 	end
 	return newTable;
+end
+
+
+-------------------------------------------------------------------------------
+-- getInventoryText()
+--
+-- Returns the table of parses for all text in the inventory region.
+-------------------------------------------------------------------------------
+function getInventoryText()
+	local inventoryRegion = srFindInvRegion()
+	if inventoryRegion then
+		stripRegion(inventoryRegion);
+		local table = parseRegion(inventoryRegion);
+
+		return table
+	end
+
+	return nil
 end
