@@ -63,6 +63,65 @@ local gpsInit = false;
 local gpsCenter;
 local gpsStep;
 
+--------------------------------------------------------------
+-- getDate(fmt)
+--
+-- fmt -  format of resultant text
+--
+-- Returns the date in minutes since epoch (Year 1, Akhet I-1, 12:00AM)
+-- Returns nil if the date cannot be obtained
+---------------------------------------------------------------
+function getTime(fmt)
+   local t = findAllText("Year", nil, NOPIN);
+   if t == nil then
+      return t;
+   end
+   for i=1, #t do
+      local year, season, month, day, hour, minute, ampm = string.match(t[i][2], "Year (%d+), (%a+) (%a+)-(%d+), (%d+):(%d+)(%a+)");
+      if year and season and month and day and hour and minute then
+         -- perform data validation
+         local seasonIndex = {};
+         seasonIndex["Akhet"] = 1;
+         seasonIndex["Peret"] = 2;
+         seasonIndex["Shemu"] = 3;
+         local monthIndex = {};
+         monthIndex["I"] = 1;
+         monthIndex["II"] = 2;
+         monthIndex["III"] = 3;
+         monthIndex["IV"] = 4;
+         year = tonumber(year);
+         day = tonumber(day);
+         hour = tonumber(hour);
+         minute = tonumber(minute);
+         season = seasonIndex[season];
+         month = monthIndex[month];
+         if ampm == "AM" then
+            ampm = 0;
+         elseif ampm == "PM" then
+            ampm = 12;
+         else
+            ampm = nil;
+         end
+         if year and season and month and day and hour and minute and ampm then
+            if fmt ~= nil then
+               return t[i][2];
+            end
+            if hour == 12 then
+               hour = 0;
+            end
+            hour = hour + ampm;
+            local seasons = (year - 1)*3 + season;
+            local months = (seasons - 1)*4 + month;
+            local days = (months - 1)*30 + day;
+            local hours = (days - 1)*24 + hour;
+            local minutes = hours*60 +  minute;
+            return minutes;
+         end
+      end
+   end
+   return nil;
+end
+
 function initStep()
   if not gpsInit then
     srReadScreen();
