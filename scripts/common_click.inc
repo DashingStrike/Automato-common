@@ -241,8 +241,8 @@ function drawWater()
       srReadScreen();
       local fill = srFindImage("FillWithWater.png");
       if fill then
-	safeClick(fill[0] + 5, fill[1]);
-	result = true;
+    safeClick(fill[0] + 5, fill[1]);
+    result = true;
       end
     end
   end
@@ -252,12 +252,12 @@ function drawWater()
     local water = srFindImage("iconWaterJugSmall.png", 1);
     if water then
       safeClick(water[0]+3, water[1]-5);
-	  lsSleep(click_delay*5);
+      lsSleep(click_delay*5);
       local max = waitForImage("crem-max.png", 500, "Waiting for Max button");
       if max then
-		safeClick(max[0]+5, max[1]+5);
+        safeClick(max[0]+5, max[1]+5);
         sleepWithStatus(3500, "Waiting for water pickup animation...");
-		result = true;
+        result = true;
       end
     end
   end
@@ -304,170 +304,170 @@ chest_color = 2036219647;
 tent_color = 1399546879;
 
 function stash(types, x, y)
-	if(types == nil or #types < 1) then
-		return false;
-	end
-	srReadScreen();
-	local leaveMenuPinned = false;
-	local pos;
-	if((not x == nil) and (not y == nil)) then
-		pos = pinStorageMenu(x,y);
-	end
-	if(not pos) then
-		pos = findText("Stash");
-		if(pos) then
-			leaveMenuPinned = true;
-		end
-	end
-	if(not pos) then
-		pos = findAndPinContainer();
-	end
-	if(not pos) then
-		lsPrintln("Unable to find the storage container or its menu");
-		return false;
-	end
+    if(types == nil or #types < 1) then
+        return false;
+    end
+    srReadScreen();
+    local leaveMenuPinned = false;
+    local pos;
+    if((not x == nil) and (not y == nil)) then
+        pos = pinStorageMenu(x,y);
+    end
+    if(not pos) then
+        pos = findText("Stash");
+        if(pos) then
+            leaveMenuPinned = true;
+        end
+    end
+    if(not pos) then
+        pos = findAndPinContainer();
+    end
+    if(not pos) then
+        lsPrintln("Unable to find the storage container or its menu");
+        return false;
+    end
 
-	local stashPos = findText("Stash");
-	if(not stashPos) then
-		lsPrintln("stash() could not find the Stash menu");
-		if(not leaveMenuPinned) then
-			unpinStorageMenu();
-		end
-		return false;
-	end
-	stashPos[0] = stashPos[0] + 15;
-	stashPos[1] = stashPos[1] + 3;
-	local stashMenuOnScreen = false;
-	local i;
-	for i=1,#types do
-		checkBreak();
-		if(not stashMenuOnScreen) then
-			safeClick(stashPos[0],stashPos[1]);
-			lsSleep(click_delay*3);
-			srReadScreen();
-			stashMenuOnScreen = true;
-		end
-		local pos = findText(types[i]);
-		if(pos) then
-			safeClick(pos[0]+15,pos[1]+3);
-			stashMenuOnScreen = false;
-			lsSleep(click_delay*3);
-			srReadScreen();
-			local pos = findText("Stash All");
-			if(pos) then
-				safeClick(pos[0]+15,pos[1]+3);
-			else
-				if(not clickMax()) then
-					lsSleep(500);
-					srReadScreen();
-					clickMax();
-				end
-			end
-			lsPrintln(types[i] .. " stashed");
-			lsSleep(click_delay*3);
-			srReadScreen();
-		end
-	end
-	if(stashMenuOnScreen) then
-		safeClick(stashPos[0]-30,stashPos[1]);
-	end
-	if(leaveMenuPinned) then
-		-- Click the menu to update the numbers in the title so that
-		-- anyone viewing the screen can see how much space is left
-		-- in the storage container
-		pos = findText("full");
-		if(pos) then
-			safeClick(pos[0]+15,pos[1]+3);
-		end
-	else
-		unpinStorageMenu();
-	end
-	return true;
+    local stashPos = findText("Stash");
+    if(not stashPos) then
+        lsPrintln("stash() could not find the Stash menu");
+        if(not leaveMenuPinned) then
+            unpinStorageMenu();
+        end
+        return false;
+    end
+    stashPos[0] = stashPos[0] + 15;
+    stashPos[1] = stashPos[1] + 3;
+    local stashMenuOnScreen = false;
+    local i;
+    for i=1,#types do
+        checkBreak();
+        if(not stashMenuOnScreen) then
+            safeClick(stashPos[0],stashPos[1]);
+            lsSleep(click_delay*3);
+            srReadScreen();
+            stashMenuOnScreen = true;
+        end
+        local pos = findText(types[i]);
+        if(pos) then
+            safeClick(pos[0]+15,pos[1]+3);
+            stashMenuOnScreen = false;
+            lsSleep(click_delay*3);
+            srReadScreen();
+            local pos = findText("Stash All");
+            if(pos) then
+                safeClick(pos[0]+15,pos[1]+3);
+            else
+                if(not clickMax()) then
+                    lsSleep(500);
+                    srReadScreen();
+                    clickMax();
+                end
+            end
+            lsPrintln(types[i] .. " stashed");
+            lsSleep(click_delay*3);
+            srReadScreen();
+        end
+    end
+    if(stashMenuOnScreen) then
+        safeClick(stashPos[0]-30,stashPos[1]);
+    end
+    if(leaveMenuPinned) then
+        -- Click the menu to update the numbers in the title so that
+        -- anyone viewing the screen can see how much space is left
+        -- in the storage container
+        pos = findText("full");
+        if(pos) then
+            safeClick(pos[0]+15,pos[1]+3);
+        end
+    else
+        unpinStorageMenu();
+    end
+    return true;
 end
 
 function pinStorageMenu(x,y)
-	centerMouse();
-	safeClick(x,y,false);
-	lsSleep(click_delay*3);
-	srReadScreen();
-	local pos = findText("Stash");
-	if(pos) then
-		local pos2 = findText("full");
-		if(pos2) then
-			safeClick(pos2[0],pos2[1],true);
-			return pos;
-		end
-	end
-	return nil;
+    centerMouse();
+    safeClick(x,y,false);
+    lsSleep(click_delay*3);
+    srReadScreen();
+    local pos = findText("Stash");
+    if(pos) then
+        local pos2 = findText("full");
+        if(pos2) then
+            safeClick(pos2[0],pos2[1],true);
+            return pos;
+        end
+    end
+    return nil;
 end
 
 function unpinStorageMenu()
-	local pos = findText("full");
-	if(pos) then
-		safeClick(pos[0]+15,pos[1]+3,true);
-	end
+    local pos = findText("full");
+    if(pos) then
+        safeClick(pos[0]+15,pos[1]+3,true);
+    end
 end
 
 function findAndPinContainer()
-	centerMouse();
-	local xyWindowSize = srGetWindowSize();
-	local mid = {};
-	mid[0] = xyWindowSize[0] / 2;
-	mid[1] = xyWindowSize[1] / 2;
-	local storagePos = nil;
-	local maxDelta = math.max(xyWindowSize[0] / 2, xyWindowSize[1] / 2);
-	local delta;
-	for delta = 1, maxDelta, 2 do
-		checkBreak();
-		local dx;
-		for dx = (delta * -1), delta, 2 do
-			if(mid[0]+dx >= 0 and mid[0]+dx < xyWindowSize[0] and mid[1] > delta) then
-				if(checkStoragePixel(mid[0]+dx,mid[1]+delta)) then
-					local pos = pinStorageMenu(mid[0]+dx,mid[1]+delta);
-					if(pos) then
-						return pos;
-					end
-				end
-				if(checkStoragePixel(mid[0]+dx,mid[1]-delta)) then
-					local pos = pinStorageMenu(mid[0]+dx,mid[1]-delta);
-					if(pos) then
-						return pos;
-					end
-				end
-			end
-		end
-		local dy;
-		for dy = (delta * -1), delta, 3 do
-			if(mid[1]+dy >= 0 and mid[1]+dy < xyWindowSize[1] and mid[0] > delta) then
-				if(checkStoragePixel(mid[0]+delta,mid[1]+dy)) then
-					local pos = pinStorageMenu(mid[0]+delta,mid[1]+dy);
-					if(pos) then
-						return pos;
-					end
-				end
-				if(checkStoragePixel(mid[0]-delta,mid[1]+dy)) then
-					local pos = pinStorageMenu(mid[0]+delta,mid[1]+dy);
-					if(pos) then
-						return pos;
-					end
-				end
-			end
-		end
-	end
-	lsPrintln("Unable to find the storage container");
-	return false;
+    centerMouse();
+    local xyWindowSize = srGetWindowSize();
+    local mid = {};
+    mid[0] = xyWindowSize[0] / 2;
+    mid[1] = xyWindowSize[1] / 2;
+    local storagePos = nil;
+    local maxDelta = math.max(xyWindowSize[0] / 2, xyWindowSize[1] / 2);
+    local delta;
+    for delta = 1, maxDelta, 2 do
+        checkBreak();
+        local dx;
+        for dx = (delta * -1), delta, 2 do
+            if(mid[0]+dx >= 0 and mid[0]+dx < xyWindowSize[0] and mid[1] > delta) then
+                if(checkStoragePixel(mid[0]+dx,mid[1]+delta)) then
+                    local pos = pinStorageMenu(mid[0]+dx,mid[1]+delta);
+                    if(pos) then
+                        return pos;
+                    end
+                end
+                if(checkStoragePixel(mid[0]+dx,mid[1]-delta)) then
+                    local pos = pinStorageMenu(mid[0]+dx,mid[1]-delta);
+                    if(pos) then
+                        return pos;
+                    end
+                end
+            end
+        end
+        local dy;
+        for dy = (delta * -1), delta, 3 do
+            if(mid[1]+dy >= 0 and mid[1]+dy < xyWindowSize[1] and mid[0] > delta) then
+                if(checkStoragePixel(mid[0]+delta,mid[1]+dy)) then
+                    local pos = pinStorageMenu(mid[0]+delta,mid[1]+dy);
+                    if(pos) then
+                        return pos;
+                    end
+                end
+                if(checkStoragePixel(mid[0]-delta,mid[1]+dy)) then
+                    local pos = pinStorageMenu(mid[0]+delta,mid[1]+dy);
+                    if(pos) then
+                        return pos;
+                    end
+                end
+            end
+        end
+    end
+    lsPrintln("Unable to find the storage container");
+    return false;
 end
 
 function checkStoragePixel(x, y)
-	if(pixelBlockCheck(x, y, tent_color, 10, 8, 2)) then
-		return true;
-	end
-	if(pixelBlockCheck(x, y, warehouse_color, 10, 8, 2)) then
-		return true;
-	end
-	if(pixelBlockCheck(x, y, chest_color, 10, 8, 2)) then
-		return true;
-	end
+    if(pixelBlockCheck(x, y, tent_color, 10, 8, 2)) then
+        return true;
+    end
+    if(pixelBlockCheck(x, y, warehouse_color, 10, 8, 2)) then
+        return true;
+    end
+    if(pixelBlockCheck(x, y, chest_color, 10, 8, 2)) then
+        return true;
+    end
 end
 
 
@@ -479,17 +479,17 @@ end
 -------------------------------------------------------------------------------
 
 function clickMax()
-	local count;
-	for count=0, 10 do
-		local pos = srFindImage("crem-max.png", 5000);
-		if pos then
-			safeClick(pos[0]+5, pos[1]+5);
-			return true;
-		end
-		lsSleep(click_delay);
-		srReadScreen();
-	end
-	return false;
+    local count;
+    for count=0, 10 do
+        local pos = srFindImage("crem-max.png", 5000);
+        if pos then
+            safeClick(pos[0]+5, pos[1]+5);
+            return true;
+        end
+        lsSleep(click_delay);
+        srReadScreen();
+    end
+    return false;
 end
 
 
