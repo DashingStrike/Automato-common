@@ -252,7 +252,6 @@ function drawWater()
     local water = srFindImage("iconWaterJugSmall.png", 1);
     if water then
       safeClick(water[0]+3, water[1]-5);
-      lsSleep(click_delay*5);
       local max = waitForImage("crem-max.png", 500, "Waiting for Max button");
       if max then
         safeClick(max[0]+5, max[1]+5);
