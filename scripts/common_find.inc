@@ -127,6 +127,7 @@ EXACT_NOPIN = 3;
 EXACT_REGION = 5;
 NOPIN_REGION = 6;
 EXACT_NOPIN_REGION = 7;
+REGEX = 8;
 
 function findText(text, window, flag)
   local parses = findAllText(text, window, flag);
@@ -141,6 +142,11 @@ function findAllText(text, window, flag)
   local exact = flag and (flag % 2 == 1);
   local nopin = flag and (math.floor(flag/2) % 2 == 1);
   local region = flag and (math.floor(flag/4) % 2 == 1);
+  local regex = flag and (math.floor(flag/8) % 2 == 1);
+  
+  if regex and exact then
+    error("Cannot use both REGEX and EXACT flags");
+  end
 
   local results = {};
   local windowList = {window};
@@ -161,6 +167,7 @@ function findAllText(text, window, flag)
       if not text
 	or (exact and parses[j][2] == text)
 	or (not exact and string.find(parses[j][2], text, 1, true))
+   or (regex and string.find(parses[j][2], text, 1))
       then
 	if region then
 	  table.insert(results, windowList[i]);
