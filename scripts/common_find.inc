@@ -333,6 +333,7 @@ function ocrNumber(startX, startY, characterSet)
   local x = startX;
   local y = startY;
   local digit=nil;
+  decimal = false;
   local offset=0;
   while (not digit) and (offset < 10) do
     digit = findDigit(x, y, sizeX, sizeY, prefix);
@@ -344,9 +345,21 @@ function ocrNumber(startX, startY, characterSet)
   -- find remaining digits
   local result = 0;
   while digit do
-    result = result * 10 + digit;
-    x = x + sizeX + 1;
+  	if decimal == false then
+  	  result = result * 10 + digit;
+	    x = x + sizeX + 1;
+  	else
+			result = result + digit/math.pow(10, afterDecimal);
+			afterDecimal = afterDecimal + 1;
+	    x = x + sizeX + 1;
+    end
     digit = findDigit(x, y, sizeX, sizeY, prefix);
+  	if digit == "." then
+			decimal = true;
+			afterDecimal = 1;
+			x = x + 4;
+			digit = findDigit(x, y, sizeX, sizeY, prefix);
+		end
   end
   return result;
 end
@@ -360,6 +373,14 @@ function findDigit(x, y, sizeX, sizeY, prefix)
       result = i;
       break;
     end
+    if prefix == "ocr/" then
+	    if srFindImageInRange(prefix .. "decimals.png", x, y,
+	    	sizeX, sizeY, tol)
+	    then
+	    	result = ".";
+	    	break;
+	    end
+	  end
   end
   return result;
 end
