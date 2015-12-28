@@ -27,7 +27,7 @@ function findAllImages(image_name, range, tol)
     range = makeBox(0, 0, size[0], size[1]);
   end
   return findAllImagesInRange(image_name, range.x, range.y,
-			      range.width, range.height, tol);
+            range.width, range.height, tol);
 end
 
 function findImage(image_name, range, tol)
@@ -39,7 +39,7 @@ function findImage(image_name, range, tol)
     tol = 5000;
   end
   return srFindImageInRange(image_name, range.x, range.y,
-			    range.width, range.height, tol);
+          range.width, range.height, tol);
 end
 
 -------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ function findAllImagesInRange(image_name, startX, startY, width, height, tol)
       local x = pos[0]+1;
       pos = srFindImageInRange(image_name, x, y,
                                endX - x, math.min(xyImageSize[1], endY - y),
-			       tol);
+             tol);
       if not pos then
         break;
       end
@@ -111,7 +111,7 @@ function findImageInWindow(image_name, x, y, tol)
   local range = getWindowBorders(x, y);
   if range then
     result = srFindImageInRange(image_name, range.x, range.y,
-				range.width, range.height, tol);
+        range.width, range.height, tol);
   end
   return result;
 end
@@ -156,25 +156,25 @@ function findAllText(text, window, flag)
 
   for i=1,#windowList do
     local current = makeBox(windowList[i].x + 7, windowList[i].y + 4,
-			    windowList[i].width - 12, windowList[i].height - 7);
+          windowList[i].width - 12, windowList[i].height - 7);
     if not nopin then
       current = makeBox(current.x, current.y,
-			current.width - 20, current.height);
+      current.width - 20, current.height);
     end
     local parses = parseWindow(current);
     for j=1,#parses do
 --      lsPrintln("parse: " .. parses[j][2]);
       if not text
-	or (exact and parses[j][2] == text)
-	or (not exact and string.find(parses[j][2], text, 1, true))
+  or (exact and parses[j][2] == text)
+  or (not exact and string.find(parses[j][2], text, 1, true))
    or (regex and string.find(parses[j][2], text, 1))
       then
-	if region then
-	  table.insert(results, windowList[i]);
-	  break;
-	else
-	  table.insert(results, parses[j]);
-	end
+  if region then
+    table.insert(results, windowList[i]);
+    break;
+  else
+    table.insert(results, parses[j]);
+  end
       end
     end
   end
@@ -196,13 +196,13 @@ function breakupRegion(region, windows)
   table.insert(windows, current);
   if region.width - current.width > 10 then
     breakupRegion(makeBox(region.x + current.width + 8, region.y,
-			  region.width - current.width - 8, region.height),
-		  windows);
+        region.width - current.width - 8, region.height),
+      windows);
   end
   if region.height - current.height > 4 then
     breakupRegion(makeBox(region.x, region.y + current.height + 2,
-			  current.width + 8, region.height - current.height - 2),
-		  windows);
+        current.width + 8, region.height - current.height - 2),
+      windows);
   end
 end
 
@@ -218,7 +218,7 @@ function parseWindow(window)
   local result = {};
   srStripRegion(window.x, window.y, window.width, window.height);
   local table = srParseTextRegion(window.x, window.y,
-				  window.width, window.height);
+          window.width, window.height);
   if table then
     local count = math.floor((#table + 1) / 3);
     for i = 1, count do
@@ -275,14 +275,14 @@ function pixelMatchList(anchor, offset, colors, tolerance)
   end
   local result = false;
   local screenColor = srReadPixel(anchor[0] + offset[0],
-				  anchor[1] + offset[1]);
+          anchor[1] + offset[1]);
   for i=1,#colors do
     local currentMatch = true;
     local diffs = calculatePixelDiffs(colors[i], math.floor(screenColor/256));
     for j=1,#diffs do
       if diffs[j] > tolerance then
-	currentMatch = false;
-	break;
+  currentMatch = false;
+  break;
       end
     end
     if currentMatch then
@@ -333,6 +333,7 @@ function ocrNumber(startX, startY, characterSet)
   local x = startX;
   local y = startY;
   local digit=nil;
+  decimal = false;
   local offset=0;
   while (not digit) and (offset < 10) do
     digit = findDigit(x, y, sizeX, sizeY, prefix);
@@ -344,9 +345,21 @@ function ocrNumber(startX, startY, characterSet)
   -- find remaining digits
   local result = 0;
   while digit do
-    result = result * 10 + digit;
-    x = x + sizeX + 1;
+    if decimal == false then
+      result = result * 10 + digit;
+      x = x + sizeX + 1;
+    else
+      result = result + digit/math.pow(10, afterDecimal);
+      afterDecimal = afterDecimal + 1;
+      x = x + sizeX + 1;
+    end
     digit = findDigit(x, y, sizeX, sizeY, prefix);
+    if digit == "." then
+      decimal = true;
+      afterDecimal = 1;
+      x = x + 4;
+      digit = findDigit(x, y, sizeX, sizeY, prefix);
+    end
   end
   return result;
 end
@@ -355,10 +368,18 @@ function findDigit(x, y, sizeX, sizeY, prefix)
   local result = nil;
   for i=0, 9 do
     if srFindImageInRange(prefix .. i .. ".png", x, y,
-			  sizeX, sizeY, tol)
+        sizeX, sizeY, tol)
     then
       result = i;
       break;
+    end
+    if prefix == "ocr/" then
+      if srFindImageInRange(prefix .. "decimals.png", x, y,
+        sizeX, sizeY, tol)
+      then
+        result = ".";
+        break;
+      end
     end
   end
   return result;
