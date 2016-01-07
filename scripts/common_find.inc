@@ -146,6 +146,10 @@ BROWSE_INVENTORY = {3, 40, -379, -11};
 BROWSE_CHEST = {354, 40, -379, -11};
 
 function findAllText(text, window, flag, sizemod)
+  if flag == NOPIN then
+    sizemod = NOPIN
+    flag = nil;
+  end
   if sizemod == nil then
     sizemod = PINNED;
   end
