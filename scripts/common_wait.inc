@@ -186,8 +186,9 @@ function iterateText(args)
   local text = args[1];
   local range = args[2];
   local flags = args[3];
+  local sizemod = args[4];
   srReadScreen();
-  return findText(text, range, flags);
+  return findText(text, range, flags, sizemod);
 end
 
 ------------------------------------------------------------------------------
@@ -250,7 +251,7 @@ function waitForImage(file, timeout, message, range, tol)
 end
 
 -------------------------------------------------------------------------------
--- waitForText(text, timeout, message, range, flags)
+-- waitForText(text, timeout, message, range, flags, sizemod)
 --
 -- Wait for a particular image to appear subject to a timeout in ms.
 --
@@ -259,19 +260,20 @@ end
 -- message (optional) -- Status message to show while waiting
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
+-- sizemod (optional) -- same constants as findText()
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
 
-function waitForText(text, timeout, message, range, flags)
+function waitForText(text, timeout, message, range, flags, sizemod)
   if not text then
     error("Incorrect number of arguments for waitForText()");
   end
-  return waitForFunction(iterateText, {text, range, flags}, timeout, message);
+  return waitForFunction(iterateText, {text, range, flags, sizemod}, timeout, message);
 end
 
 -------------------------------------------------------------------------------
--- waitForNoText(text, timeout, message, range, flags)
+-- waitForNoText(text, timeout, message, range, flags, sizemod)
 --
 -- Wait for a particular text to disappear subject to a timeout in ms.
 --
@@ -280,15 +282,16 @@ end
 -- message (optional) -- Status message to show while waiting
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
+-- sizemod (optional) -- same constants as findText()
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
 
-function waitForNoText(text, timeout, message, range, flags)
+function waitForNoText(text, timeout, message, range, flags, sizemod)
   if not text then
     error("Incorrect number of arguments for waitForText()");
   end
-  return waitForFunction(iterateText, {text, range, flags}, timeout, message, true);
+  return waitForFunction(iterateText, {text, range, flags, sizemod}, timeout, message, true);
 end
 
 -------------------------------------------------------------------------------

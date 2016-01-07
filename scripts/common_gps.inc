@@ -11,7 +11,7 @@ function findCoords()
 
   if anchor then
     local window = getWindowBorders(anchor[0], anchor[1]);
-    local lines = findAllText(nil, window, NOPIN);
+    local lines = findAllText(nil, window, nil, NOPIN);
 --    for i=1,#lines do
 --      lsPrintln("LINE " .. i .. " : " .. table.concat(lines[i], ","));
 --    end
@@ -72,7 +72,7 @@ local gpsStep;
 -- Returns nil if the date cannot be obtained
 ---------------------------------------------------------------
 function getTime(fmt)
-   local t = findAllText("Year", nil, NOPIN);
+   local t = findAllText("Year", nil, nil, NOPIN);
    if t == nil then
       return t;
    end
