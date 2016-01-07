@@ -120,27 +120,39 @@ end
 -- suffice. If unset, any line containing the text will be returned.
 EXACT = 1;
 -- If set, this window does not contain a pin in the corner.
-NOPIN = 2;
 -- If set, returns the window containing the text rather than the parse.
 REGION = 4;
-EXACT_NOPIN = 3;
+-- If set ignores all but the first instance in each window.
 EXACT_REGION = 5;
-NOPIN_REGION = 6;
-EXACT_NOPIN_REGION = 7;
 REGEX = 8;
 
-function findText(text, window, flag)
-  local parses = findAllText(text, window, flag);
-  local result = nil;
-  if #parses >= 1 then
-    result = parses[1];
-  end
-  return result;
+function findText(text, window, flag, sizemod)
+   local parses = findAllText(texts, windows, flag, sizemod);
+   local result = nil;
+   if #parses >= 1 then
+      result = parses[1];
+   end
+   return result;
 end
 
-function findAllText(text, window, flag)
+-- Set of window sizes for sizemod field. Values listed are added to x, y,
+-- width, height of each window, respectively
+NOPIN = {0, 0, 0, 0};
+PINNED = {0, 0, -20, 0};
+INFO_POPUP = {10, 10, -40, -62};
+CPLX_ITEM_CHOOSE = {9, 69, -40, -103};
+SLIGHT_INSET = {10, 0, -20, 0};
+BROWSE_INVENTORY = {3, 40, -379, -11};
+BROWSE_CHEST = {354, 40, -379, -11};
+
+function findAllText(text, window, flag, sizemod)
+  if sizemod == nil then
+    sizemod = PINNED;
+  end
+  if #sizemod ~= 4 then
+    error("Incorrect sizemod argument to text function");
+  end
   local exact = flag and (flag % 2 == 1);
-  local nopin = flag and (math.floor(flag/2) % 2 == 1);
   local region = flag and (math.floor(flag/4) % 2 == 1);
   local regex = flag and (math.floor(flag/8) % 2 == 1);
   
@@ -156,25 +168,20 @@ function findAllText(text, window, flag)
 
   for i=1,#windowList do
     local current = makeBox(windowList[i].x + 7, windowList[i].y + 4,
-          windowList[i].width - 12, windowList[i].height - 7);
-    if not nopin then
-      current = makeBox(current.x, current.y,
-      current.width - 20, current.height);
-    end
+          windowList[i].width - 12, windowList[i].height - 7); -- Basic magic # window resizing
+	       current = makeBox(current.x + sizemod[1], current.y + sizemod[2], current.width + sizemod[3], 
+                        current.height + sizemod[4]); -- Add in custom window resizing
     local parses = parseWindow(current);
     for j=1,#parses do
---      lsPrintln("parse: " .. parses[j][2]);
-      if not text
-  or (exact and parses[j][2] == text)
-  or (not exact and string.find(parses[j][2], text, 1, true))
-   or (regex and string.find(parses[j][2], text, 1))
-      then
-  if region then
-    table.insert(results, windowList[i]);
-    break;
-  else
-    table.insert(results, parses[j]);
-  end
+      if not text or (exact and parses[j][2] == text)
+                  or (not exact and string.find(parses[j][2], text, 1, true))
+                  or (regex and string.find(parses[j][2], text, 1)) then
+        if region then
+          table.insert(results, windowList[i]);
+          break;
+        else
+          table.insert(results, parses[j]);
+        end
       end
     end
   end
