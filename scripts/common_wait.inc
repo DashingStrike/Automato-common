@@ -186,8 +186,9 @@ function iterateText(args)
   local text = args[1];
   local range = args[2];
   local flags = args[3];
+  local sizemod = args[4];
   srReadScreen();
-  return findText(text, range, flags);
+  return findText(text, range, flags, sizemod);
 end
 
 ------------------------------------------------------------------------------

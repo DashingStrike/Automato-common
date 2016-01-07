@@ -127,7 +127,7 @@ EXACT_REGION = 5;
 REGEX = 8;
 
 function findText(text, window, flag, sizemod)
-   local parses = findAllText(texts, windows, flag, sizemod);
+   local parses = findAllText(text, window, flag, sizemod);
    local result = nil;
    if #parses >= 1 then
       result = parses[1];
