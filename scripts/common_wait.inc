@@ -243,7 +243,7 @@ end
 -- message (optional) -- Status message to show while waiting
 -- range (optional) -- box to restrict search
 -- tol (optional) -- tolerance for comparison
--- refresh (option) -- location to click to refresh window before searching
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns image on success or none on failure
 -------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ end
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
--- refresh (option) -- location to click to refresh window before searching
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
@@ -293,7 +293,7 @@ end
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
--- refresh (option) -- location to click to refresh window before searching
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
