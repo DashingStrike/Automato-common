@@ -187,14 +187,25 @@ end
 -- are pre-stashed.
 --
 -- cascade (optional) -- arrange windows into a overlapping cascade
--- waterGap (optional) -- leave a gap at the top for getting water
+-- waterGap (optional) -- leave a 50px gap at the top (for water or similar)
+-- varWidth (optional) -- width of windows, if not set width will be initial window width
+-- varHeight (optional) --  height of windows, if not set height will be initial window height
+-- sizeRight (optional) -- amount of space to right of screen, defaults to automato width
+
 -------------------------------------------------------------------------------
 
-function arrangeStashed(cascade, waterGap, varWidth, varHeight)
+function arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight)
+
   local screen = srGetWindowSize();
   local bottomRightX = screen[0] - 20;
   local bottomRightY = screen[1] - 20;
-  screen[0] = screen[0] - lsGetWindowSize()[0];
+
+ if sizeRight then
+	 screen[0] = screen[0] - sizeRight;
+ else
+	screen[0] = screen[0] - lsGetWindowSize()[0];
+ end
+ 
   local currentX = 0;
   local currentY = 0;
   if waterGap then
