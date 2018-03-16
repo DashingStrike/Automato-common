@@ -250,8 +250,14 @@ function drawWater()
   -- Last, check for nearby pond
   if not result then
     local water = srFindImage("iconWaterJugSmall.png", 1);
-    if water then
-      safeClick(water[0]+3, water[1]-5);
+    local watersmall = srFindImage("iconWaterJugSmallIcon.png", 1);
+
+    if (water or watersmall) then
+	if water then
+        safeClick(water[0]+3, water[1]-5);
+	else
+        safeClick(watersmall[0]+3, watersmall[1]-5);
+	end
       local max = waitForImage("crem-max.png", 500, "Waiting for Max button", nil, 3000);
       if max then
         safeClick(max[0]+5, max[1]+5);
