@@ -78,7 +78,7 @@ local gpsCenter;
 local gpsStep;
 
 --------------------------------------------------------------
--- getDate(fmt)
+-- getTime(fmt)
 --
 -- fmt -  format of resultant text
 --
