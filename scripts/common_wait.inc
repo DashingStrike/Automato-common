@@ -174,6 +174,10 @@ function iterateImage(args)
   local file = args[1];
   local range = args[2];
   local tol = args[3];
+  local refresh = args[4];
+  if refresh ~= nil then
+    safeclick(refresh[0], refresh[1]);
+  end
   if not tol then
     tol = 5000;
   end
@@ -187,6 +191,10 @@ function iterateText(args)
   local range = args[2];
   local flags = args[3];
   local sizemod = args[4];
+  local refresh = args[5];
+  if refresh ~= nil then
+    safeclick(refresh[0], refresh[1]);
+  end
   srReadScreen();
   return findText(text, range, flags, sizemod);
 end
@@ -226,7 +234,7 @@ function waitForFunction(f, args, timeout, message, inverted)
 end
 
 -------------------------------------------------------------------------------
--- waitForImage(file, timeout, message, range, tol)
+-- waitForImage(file, timeout, message, range, tol, refresh)
 --
 -- Wait for a particular image to appear subject to a timeout in ms.
 --
@@ -235,11 +243,12 @@ end
 -- message (optional) -- Status message to show while waiting
 -- range (optional) -- box to restrict search
 -- tol (optional) -- tolerance for comparison
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns image on success or none on failure
 -------------------------------------------------------------------------------
 
-function waitForImage(file, timeout, message, range, tol)
+function waitForImage(file, timeout, message, range, tol, refresh)
   if not file then
     error("Incorrect number of arguments for waitForImage()");
   end
@@ -247,11 +256,11 @@ function waitForImage(file, timeout, message, range, tol)
     local size = srGetWindowSize();
     range = makeBox(0, 0, size[0], size[1]);
   end
-  return waitForFunction(iterateImage, {file, range, tol}, timeout, message);
+  return waitForFunction(iterateImage, {file, range, tol, refresh}, timeout, message);
 end
 
 -------------------------------------------------------------------------------
--- waitForText(text, timeout, message, range, flags, sizemod)
+-- waitForText(text, timeout, message, range, flags, sizemod, refresh)
 --
 -- Wait for a particular image to appear subject to a timeout in ms.
 --
@@ -261,19 +270,20 @@ end
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
 
-function waitForText(text, timeout, message, range, flags, sizemod)
+function waitForText(text, timeout, message, range, flags, sizemod, refresh)
   if not text then
     error("Incorrect number of arguments for waitForText()");
   end
-  return waitForFunction(iterateText, {text, range, flags, sizemod}, timeout, message);
+  return waitForFunction(iterateText, {text, range, flags, sizemod, refresh}, timeout, message);
 end
 
 -------------------------------------------------------------------------------
--- waitForNoText(text, timeout, message, range, flags, sizemod)
+-- waitForNoText(text, timeout, message, range, flags, sizemod, refresh)
 --
 -- Wait for a particular text to disappear subject to a timeout in ms.
 --
@@ -283,15 +293,16 @@ end
 -- range (optional) -- box to restrict search
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
+-- refresh (optional) -- location to click to refresh window before searching
 --
 -- returns parse object on success or none on failure
 -------------------------------------------------------------------------------
 
-function waitForNoText(text, timeout, message, range, flags, sizemod)
+function waitForNoText(text, timeout, message, range, flags, sizemod, refresh)
   if not text then
     error("Incorrect number of arguments for waitForText()");
   end
-  return waitForFunction(iterateText, {text, range, flags, sizemod}, timeout, message, true);
+  return waitForFunction(iterateText, {text, range, flags, sizemod, refresh}, timeout, message, true);
 end
 
 -------------------------------------------------------------------------------
