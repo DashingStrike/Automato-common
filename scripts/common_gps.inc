@@ -17,7 +17,7 @@ function findCoords()
 --    end
     local str = lines[#lines][2];
     --lsPrintln("lines: " .. str);
-    local a, b, x, y = string.find(str, ": ([0-9-]+)\, ([0-9-]+)");
+    local a, b, x, y = string.find(str, ": ([0-9-]+), ([0-9-]+)");
 	--  Fix for T8 as a 3rd line is now often present in the clock. Region Owned or Controlled by.
 --  Sometimes it's not there, such as when there's no owner/controller of a region.
 --  When it is there, this code reads the wrong line hunting for coords, so reading the previous line
@@ -25,7 +25,7 @@ function findCoords()
 --  are added to the clock. -Tizuby
     if x == nil then
 	str = lines[#lines - 1][2];
-	a, b, x, y = string.find(str, ": ([0-9-]+)\, ([0-9-]+)");
+	a, b, x, y = string.find(str, ": ([0-9-]+), ([0-9-]+)");
     end
 --  One more check to ensure x and y have values. If they're nil, exit with a friendlier message than.
 --  "wrong number of parameters sent to makePoint". -Tizuby

@@ -88,7 +88,7 @@ function getChatText()
 	if p then
 		--search through lines until we get to the first section that starts with a [time]
 		for i = 1, #p do
-			if string.match(p[i][2], "%d?h?%d+m\]") then
+			if string.match(p[i][2], "%d?h?%d+m]") then
 				if first == nil then
 					count = i;
 				else
