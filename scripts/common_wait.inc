@@ -251,6 +251,31 @@ function waitForImage(file, timeout, message, range, tol)
 end
 
 -------------------------------------------------------------------------------
+-- waitForNoImage(file, timeout, message, range, tol)
+--
+-- Wait for a particular image to disappear subject to a timeout in ms.
+--
+-- file -- filename of image to search for
+-- timeout (optional) -- maximum time to wait in ms (defaults to forever)
+-- message (optional) -- Status message to show while waiting
+-- range (optional) -- box to restrict search
+-- tol (optional) -- tolerance for comparison
+--
+-- returns image on success or none on failure
+-------------------------------------------------------------------------------
+
+function waitForNoImage(file, timeout, message, range, tol)
+  if not file then
+    error("Incorrect number of arguments for waitForNoImage()");
+  end
+  if not range then
+    local size = srGetWindowSize();
+    range = makeBox(0, 0, size[0], size[1]);
+  end
+  return waitForFunction(iterateImage, {file, range, tol}, timeout, message, true);
+end
+
+-------------------------------------------------------------------------------
 -- waitForText(text, timeout, message, range, flags, sizemod)
 --
 -- Wait for a particular image to appear subject to a timeout in ms.
