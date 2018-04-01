@@ -236,7 +236,7 @@ end
 -- range (optional) -- box to restrict search
 -- tol (optional) -- tolerance for comparison
 --
--- returns image on success or none on failure
+-- returns image on success or nil on timeout
 -------------------------------------------------------------------------------
 
 function waitForImage(file, timeout, message, range, tol)
@@ -261,7 +261,7 @@ end
 -- range (optional) -- box to restrict search
 -- tol (optional) -- tolerance for comparison
 --
--- returns image on success or none on failure
+-- returns nil on success or image on timeout
 -------------------------------------------------------------------------------
 
 function waitForNoImage(file, timeout, message, range, tol)
@@ -287,7 +287,7 @@ end
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
 --
--- returns parse object on success or none on failure
+-- returns parse object on success or nil on failure
 -------------------------------------------------------------------------------
 
 function waitForText(text, timeout, message, range, flags, sizemod)
@@ -309,7 +309,7 @@ end
 -- flags (optional) -- same flags as findText()
 -- sizemod (optional) -- same constants as findText()
 --
--- returns parse object on success or none on failure
+-- returns nil on success or parse object on failure
 -------------------------------------------------------------------------------
 
 function waitForNoText(text, timeout, message, range, flags, sizemod)
