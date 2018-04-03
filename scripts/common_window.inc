@@ -166,18 +166,20 @@ function openAndPin(x, y, timeout)
 end
 
 -------------------------------------------------------------------------------
--- arrangeInGrid(cascade, waterGap)
+-- arrangeInGrid(cascade, waterGap, varWidth, varHeight)
 --
 -- Arrange all open windows into a grid on the screen. Stashes them first.
 --
 -- cascade (optional) -- arrange windows into an overlapping cascade
 -- waterGap (optional) -- leave a gap at the top for getting water
+-- varWidth, varHeight (optional) -- specify window width/height
+-- instead of detecting.
 -------------------------------------------------------------------------------
 
-function arrangeInGrid(cascade, waterGap)
+function arrangeInGrid(cascade, waterGap, varWidth, varHeight)
   stashAllWindows(BOTTOM_LEFT);
   stashAllWindows(BOTTOM_RIGHT);
-  arrangeStashed(cascade, waterGap);
+  arrangeStashed(cascade, waterGap, varWidth, varHeight);
 end
 
 -------------------------------------------------------------------------------
@@ -345,11 +347,13 @@ end
 -- message (optional) -- extra instructions for the user
 -- allowCascade (optional) -- allow the user to arrange in a cascade
 -- allowWaterGap (optional) -- allow the user to add a water gap
+-- varWidth, varHeight (optional) -- specify window width/height
+-- instead of detecting
 -------------------------------------------------------------------------------
 
 pauseForFocus = false;
 
-function windowManager(title, message, allowCascade, allowWaterGap)
+function windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight)
   if not title then
     title = "Window Manager";
   end
@@ -369,7 +373,7 @@ function windowManager(title, message, allowCascade, allowWaterGap)
       if pauseForFocus then
 	askForWindow(focusMessage);
       end
-      arrangeInGrid(false, waterGap);
+      arrangeInGrid(false, waterGap, varWidth, varHeight);
     end
     y = y + 30;
 
@@ -379,7 +383,7 @@ function windowManager(title, message, allowCascade, allowWaterGap)
 	if pauseForFocus then
 	  askForWindow(focusMessage);
 	end
-	arrangeInGrid(true, waterGap);
+	arrangeInGrid(true, waterGap, varWidth, varHeight);
       end
       y = y + 30;
     end
