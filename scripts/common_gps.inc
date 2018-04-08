@@ -15,22 +15,19 @@ function findCoords()
 --    for i=1,#lines do
 --      lsPrintln("LINE " .. i .. " : " .. table.concat(lines[i], ","));
 --    end
-    local str = lines[#lines][2];
-    --lsPrintln("lines: " .. str);
-    local a, b, x, y = string.find(str, ": ([0-9-]+), ([0-9-]+)");
-	--  Fix for T8 as a 3rd line is now often present in the clock. Region Owned or Controlled by.
---  Sometimes it's not there, such as when there's no owner/controller of a region.
---  When it is there, this code reads the wrong line hunting for coords, so reading the previous line
---  servers as a fix. Somewhat fragile as it'll need to be updated in the future if more lines
---  are added to the clock. -Tizuby
-    if x == nil then
-	str = lines[#lines - 1][2];
-	a, b, x, y = string.find(str, ": ([0-9-]+), ([0-9-]+)");
+    local x, y;
+    for _, line in ipairs(lines) do
+      local str = line[2];
+      local start;
+      start, _, x, y = string.find(str, ": ([0-9-]+), ([0-9-]+)");
+      if start then
+        break;
+      end
     end
 --  One more check to ensure x and y have values. If they're nil, exit with a friendlier message than.
 --  "wrong number of parameters sent to makePoint". -Tizuby
     if x == nil or y == nil then
-	error("Could not find coordinates from the clock.");
+      error("Could not find coordinates from the clock.");
     end
     result = makePoint(tonumber(x), tonumber(y));
     if not result[0] or not result[1] then
