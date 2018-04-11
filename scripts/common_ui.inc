@@ -134,19 +134,20 @@ function askForFocus()
 end
 
 -------------------------------------------------------------------------------
--- statusScreen(message, color, allow_break)
+-- statusScreen(message, color, allow_break, scale)
 --
 -- Print status message and a cancel button.
 --
 -- message (optional) -- status to show user
 -- color (optional) -- color of message (defaults to white)
 -- allow_break (optional) -- allow the user to break/pause (defaults to true)
+-- scale (optional) -- set text scaling
 -------------------------------------------------------------------------------
-function statusScreenPause(message, color, allow_break)
-  statusScreen(message, color, allow_break);
+function statusScreenPause(message, color, allow_break, scale)
+  statusScreen(message, color, allow_break, scale);
 end
 
-function statusScreen(message, color, allow_break)
+function statusScreen(message, color, allow_break, scale)
   if not message then
     message = "";
   end
@@ -156,8 +157,11 @@ function statusScreen(message, color, allow_break)
   if allow_break == nil then
     allow_break = true;
   end
-  lsPrintWrapped(10, 80, 0, lsScreenX - 20, 0.8, 0.8, color, message);
-  lsPrintWrapped(10, lsScreenY-100, 0, lsScreenX - 20, 0.8, 0.8, 0xffd0d0ff,
+  if not scale then
+    scale = 1.0;
+  end
+  lsPrintWrapped(10, 80, 0, lsScreenX - 20, scale, scale, color, message);
+  lsPrintWrapped(10, lsScreenY-100, 0, lsScreenX - 20, scale, scale, 0xffd0d0ff,
 		 error_status);
   if lsButtonText(lsScreenX - 110, lsScreenY - 30, z, 100,
 		  0xFFFFFFff, "End script") then
@@ -177,7 +181,7 @@ function statusScreen(message, color, allow_break)
 end
 
 -------------------------------------------------------------------------------
--- sleepWithStatus(delay_time, message, can_pause)
+-- sleepWithStatus(delay_time, message, can_pause, scale)
 --
 -- Waits at least delay_time before returning. Show the message and
 -- allow the user to cancel the macro while waiting.
@@ -185,21 +189,25 @@ end
 -- delay_time -- minimum amount of time to wait
 -- message (optional) -- status to show user
 -- color (optional) -- color of status message
+-- scale (optional) -- set text scaling
 -------------------------------------------------------------------------------
 
-function sleepWithStatusPause(delay_time, message, color)
-  sleepWithStatus(delay_time, message, color);
+function sleepWithStatusPause(delay_time, message, color, scale)
+  sleepWithStatus(delay_time, message, color, scale);
 end
 
 local waitChars = {"-", "\\", "|", "/"};
 local waitFrame = 1;
 
-function sleepWithStatus(delay_time, message, color)
+function sleepWithStatus(delay_time, message, color, scale)
   if not color then
     color = 0xffffffff;
   end
   if not delay_time then
     error("Incorrect number of arguments for sleepWithStatus()");
+  end
+  if not scale then
+    scale = 0.8;
   end
   local start_time = lsGetTimer();
   while delay_time > (lsGetTimer() - start_time) do
@@ -209,9 +217,9 @@ function sleepWithStatus(delay_time, message, color)
     if delay_time >= 1000 then
       waitMessage = waitMessage .. time_left .. " ms ";
     end
-    lsPrintWrapped(10, 50, 0, lsScreenX - 20, 1, 1, 0xd0d0d0ff,
+    lsPrintWrapped(10, 50, 0, lsScreenX - 20, scale, scale, 0xd0d0d0ff,
 		   waitMessage .. waitChars[frame]);
-    statusScreen(message, color);
+    statusScreen(message, color, nil, scale);
     lsSleep(tick_delay);
     waitFrame = waitFrame + 1;
   end
@@ -226,7 +234,7 @@ end
 -- delay_time -- minimum amount of time to wait
 -------------------------------------------------------------------------------
 
-function sleepWithBreak(delay_time, message, color)
+function sleepWithBreak(delay_time)
   if not delay_time then
     error("Incorrect number of arguments for sleepWithBreak()");
   end
@@ -299,34 +307,38 @@ function promptNumber(prompt_string, default_value, scale)
 end
 
 -------------------------------------------------------------------------------
--- promptOkay(prompt_string)
+-- promptOkay(prompt_string, color, scale)
 --
 -- Give the user an ok/cancel dialog box.
 --
 -- prompt_string -- string giving the user a message
+-- color (optional) -- color of message (defaults to white)
+-- scale (optional) -- set text scaling
 -------------------------------------------------------------------------------
 
-function promptOkay(prompt_string, color)
+function promptOkay(prompt_string, color, scale)
   if not prompt_string then
     error("Incorrect number of arguments for promptOkay()");
   end
   if not color then
 	color = 0xFFFFFFff;
   end
+  if not scale then
+    scale = 0.7;
+  end
   local z = 0;
   local is_done = nil;
   local ret = nil;
-  local scale = 0.7;
   -- Edit box and text display
   while not is_done do
     checkBreak();
-    
+  
     lsPrint(10, 10, 0, 0.7, 0.7, 0xB0B0B0ff,
 	    "Hold Ctrl+Shift to end this script.");
-    lsPrint(10, 35, 0, 0.7, 0.7, 0xB0B0B0ff,
+    lsPrint(10, 24, 0, 0.7, 0.7, 0xB0B0B0ff,
 	    "Hold Alt+Shift to choose Okay.");
-    lsPrintWrapped(10, 60, 0, lsScreenX - 20, 1, 1, color, prompt_string);
-    
+    lsPrintWrapped(10, 60, 0, lsScreenX - 20, scale, scale, color, prompt_string);
+   
     if lsButtonText(120, 200, z, 100, 0xFFFFFFff, "OK") or
       (lsAltHeld() and lsShiftHeld()) then
       is_done = 1;
