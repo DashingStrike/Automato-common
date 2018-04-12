@@ -158,7 +158,7 @@ function statusScreen(message, color, allow_break, scale)
     allow_break = true;
   end
   if not scale then
-    scale = 1.0;
+    scale = 0.8;
   end
   lsPrintWrapped(10, 80, 0, lsScreenX - 20, scale, scale, color, message);
   lsPrintWrapped(10, lsScreenY-100, 0, lsScreenX - 20, scale, scale, 0xffd0d0ff,
@@ -263,7 +263,7 @@ function promptNumber(prompt_string, default_value, scale)
     default_value = 0;
   end
   if not scale then
-    scale = 1.0;
+    scale = 0.8;
   end
   local z = 0;
   local is_done = nil;
@@ -324,7 +324,7 @@ function promptOkay(prompt_string, color, scale)
 	color = 0xFFFFFFff;
   end
   if not scale then
-    scale = 0.7;
+    scale = 0.8;
   end
   local z = 0;
   local is_done = nil;
