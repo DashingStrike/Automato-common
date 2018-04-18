@@ -358,7 +358,7 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
     title = "Window Manager";
   end
   if not message then
-    message = "Tap Ctrl to open and pin a window."
+    message = "Tap Ctrl to open and pin a window.\nTap Alt to open, pin and stash."
   end
   local waterGap = false;
   local shift = false;
@@ -431,6 +431,18 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
       local y = 0;
       x, y = srMousePos();
       openAndPin(x, y, 500);
+    end
+    while lsAltHeld() do
+      checkBreak();
+      shift = true;
+    end
+    if shift then
+      shift = false;
+      local x = 0;
+      local y = 0;
+      x, y = srMousePos();
+      openAndPin(x, y, 500);
+      stashWindow(x, y, BOTTOM_RIGHT);
     end
     if lsButtonText(10, lsScreenY - 30, 0, 100, 0xFFFFFFff, "Done") then
         done = true;
