@@ -27,7 +27,7 @@ function findCoords()
 --  One more check to ensure x and y have values. If they're nil, exit with a friendlier message than.
 --  "wrong number of parameters sent to makePoint". -Tizuby
     if x == nil or y == nil then
-      error("Could not find coordinates from the clock.");
+      error("Could not find coordinates from the clock.\nIs the /clockloc visible or partially covered?");
     end
     result = makePoint(tonumber(x), tonumber(y));
     if not result[0] or not result[1] then
@@ -41,6 +41,9 @@ end
 function walkTo(dest)
   srReadScreen();
   local coords = findCoords();
+    if not coords then
+      error("Could not find coordinates from the clock.\nIs the /clockloc visible or partially covered?");
+    end
   while coords[0] ~= dest[0] or coords[1] ~= dest[1] do
     while coords[0] < dest[0] do
       stepTo(makePoint(1, 0));
