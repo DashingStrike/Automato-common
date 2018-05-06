@@ -166,24 +166,27 @@ function openAndPin(x, y, timeout)
 end
 
 -------------------------------------------------------------------------------
--- arrangeInGrid(cascade, waterGap, varWidth, varHeight)
+-- arrangeInGrid(cascade, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
 --
 -- Arrange all open windows into a grid on the screen. Stashes them first.
 --
 -- cascade (optional) -- arrange windows into an overlapping cascade
 -- waterGap (optional) -- leave a gap at the top for getting water
--- varWidth, varHeight (optional) -- specify window width/height
--- instead of detecting.
+-- varWidth, varHeight (optional) -- specify window width/height - instead of detecting.
+-- sizeRight (optional) -- amount of space to right of screen, defaults to automato width
+-- offsetWidth (optional) -- adds an additional width offset
+-- offsetHeight (optional) -- adds an additional height offset
+
 -------------------------------------------------------------------------------
 
-function arrangeInGrid(cascade, waterGap, varWidth, varHeight)
+function arrangeInGrid(cascade, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
   stashAllWindows(BOTTOM_LEFT);
   stashAllWindows(BOTTOM_RIGHT);
-  arrangeStashed(cascade, waterGap, varWidth, varHeight);
+  arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight);
 end
 
 -------------------------------------------------------------------------------
--- arrangeStashed(cascade, waterGap)
+-- arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
 --
 -- Arrange all open windows into a grid on the screen. Assumes they
 -- are pre-stashed.
@@ -193,11 +196,12 @@ end
 -- varWidth (optional) -- width of windows, if not set width will be initial window width
 -- varHeight (optional) --  height of windows, if not set height will be initial window height
 -- sizeRight (optional) -- amount of space to right of screen, defaults to automato width
+-- offsetWidth (optional) -- adds an additional width offset
+-- offsetHeight (optional) -- adds an additional height offset
 
 -------------------------------------------------------------------------------
 
-function arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight)
-
+function arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
   local screen = srGetWindowSize();
   local bottomRightX = screen[0] - 20;
   local bottomRightY = screen[1] - 20;
@@ -234,6 +238,12 @@ function arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight)
       height = bounds[3] - bounds[1];
     else
       height = varHeight;
+    end
+    if offsetWidth then
+     width = width + offsetWidth;
+    end
+    if offsetHeight then
+     height = height + offsetHeight;
     end
     
     if cascade then
@@ -338,7 +348,7 @@ function closeEmptyRegions()
 end
 
 -------------------------------------------------------------------------------
--- windowManager(title, message, allowCascade, allowWaterGap)
+-- windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
 --
 -- Run a window manager interface to let the user open, pin, arrange,
 -- or clear windows.
@@ -347,13 +357,16 @@ end
 -- message (optional) -- extra instructions for the user
 -- allowCascade (optional) -- allow the user to arrange in a cascade
 -- allowWaterGap (optional) -- allow the user to add a water gap
--- varWidth, varHeight (optional) -- specify window width/height
--- instead of detecting
+-- varWidth, varHeight (optional) -- specify window width/height - instead of detecting
+-- sizeRight (optional) -- amount of space to right of screen, defaults to automato width
+-- offsetWidth (optional) -- adds an additional width offset
+-- offsetHeight (optional) -- adds an additional height offset
+
 -------------------------------------------------------------------------------
 
 pauseForFocus = false;
 
-function windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight)
+function windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
   if not title then
     title = "Window Manager";
   end
@@ -373,7 +386,7 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
       if pauseForFocus then
 	askForWindow(focusMessage);
       end
-      arrangeInGrid(false, waterGap, varWidth, varHeight);
+      arrangeInGrid(false, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight);
     end
     y = y + 30;
 
@@ -383,7 +396,7 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
 	if pauseForFocus then
 	  askForWindow(focusMessage);
 	end
-	arrangeInGrid(true, waterGap, varWidth, varHeight);
+	arrangeInGrid(true, waterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight);
       end
       y = y + 30;
     end
