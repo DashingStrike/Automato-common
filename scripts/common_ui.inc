@@ -307,7 +307,7 @@ function promptNumber(prompt_string, default_value, scale)
 end
 
 -------------------------------------------------------------------------------
--- promptOkay(prompt_string, color, scale, no_cancel)
+-- promptOkay(prompt_string, color, scale, yes_no, no_cancel, offsetY)
 --
 -- Give the user an ok/cancel dialog box.
 --
@@ -316,9 +316,10 @@ end
 -- scale (optional) -- set text scaling
 -- yes_no (optional) -- changes OK/Cancel text to Yes/No
 -- no_cancel (optional) -- supresses Cancel button
+-- offsetY (optional) -- move buttons up (negative num) or down (positive num)
 -------------------------------------------------------------------------------
 
-function promptOkay(prompt_string, color, scale, yes_no, no_cancel)
+function promptOkay(prompt_string, color, scale, yes_no, no_cancel, offsetY)
   if not prompt_string then
     error("Incorrect number of arguments for promptOkay()");
   end
@@ -327,6 +328,9 @@ function promptOkay(prompt_string, color, scale, yes_no, no_cancel)
   end
   if not scale then
     scale = 0.8;
+  end
+  if not offsetY then
+    offsetY = 0;
   end
   local z = 0;
   local is_done = nil;
@@ -347,14 +351,14 @@ function promptOkay(prompt_string, color, scale, yes_no, no_cancel)
 	    "Hold Alt+Shift to pause this script.");
     lsPrintWrapped(10, 60, 0, lsScreenX - 20, scale, scale, color, prompt_string);
    
-    if lsButtonText(100, 200, z, 100, 0xFFFFFFff, ok) or
+    if lsButtonText(100, 200+offsetY, z, 100, 0xFFFFFFff, ok) or
       (lsAltHeld() and lsShiftHeld()) then
       is_done = 1;
       ret = 1;
     end
     
     if not no_cancel then
-      if lsButtonText(100, 230, z, 100, 0xFFFFFFff, cancel) then
+      if lsButtonText(100, 230+offsetY, z, 100, 0xFFFFFFff, cancel) then
         is_done = 1;
         ret = nil;
       end
