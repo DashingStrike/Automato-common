@@ -314,10 +314,11 @@ end
 -- prompt_string -- string giving the user a message
 -- color (optional) -- color of message (defaults to white)
 -- scale (optional) -- set text scaling
+-- yes_no (optional) -- changes OK/Cancel text to Yes/No
 -- no_cancel (optional) -- supresses Cancel button
 -------------------------------------------------------------------------------
 
-function promptOkay(prompt_string, color, scale, no_cancel)
+function promptOkay(prompt_string, color, scale, yes_no, no_cancel)
   if not prompt_string then
     error("Incorrect number of arguments for promptOkay()");
   end
@@ -330,6 +331,12 @@ function promptOkay(prompt_string, color, scale, no_cancel)
   local z = 0;
   local is_done = nil;
   local ret = nil;
+  local ok = "OK"
+  local cancel = "Cancel";
+  if yes_no then
+    ok = "Yes"
+    cancel = "No"
+  end
   -- Edit box and text display
   while not is_done do
     checkBreak();
@@ -340,14 +347,14 @@ function promptOkay(prompt_string, color, scale, no_cancel)
 	    "Hold Alt+Shift to pause this script.");
     lsPrintWrapped(10, 60, 0, lsScreenX - 20, scale, scale, color, prompt_string);
    
-    if lsButtonText(100, 200, z, 100, 0xFFFFFFff, "OK") or
+    if lsButtonText(100, 200, z, 100, 0xFFFFFFff, ok) or
       (lsAltHeld() and lsShiftHeld()) then
       is_done = 1;
       ret = 1;
     end
     
     if not no_cancel then
-      if lsButtonText(100, 230, z, 100, 0xFFFFFFff, "Cancel") then
+      if lsButtonText(100, 230, z, 100, 0xFFFFFFff, cancel) then
         is_done = 1;
         ret = nil;
       end
