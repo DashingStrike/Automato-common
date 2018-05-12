@@ -307,16 +307,17 @@ function promptNumber(prompt_string, default_value, scale)
 end
 
 -------------------------------------------------------------------------------
--- promptOkay(prompt_string, color, scale)
+-- promptOkay(prompt_string, color, scale, no_cancel)
 --
 -- Give the user an ok/cancel dialog box.
 --
 -- prompt_string -- string giving the user a message
 -- color (optional) -- color of message (defaults to white)
 -- scale (optional) -- set text scaling
+-- no_cancel (optional) -- supresses Cancel button
 -------------------------------------------------------------------------------
 
-function promptOkay(prompt_string, color, scale)
+function promptOkay(prompt_string, color, scale, no_cancel)
   if not prompt_string then
     error("Incorrect number of arguments for promptOkay()");
   end
@@ -336,20 +337,22 @@ function promptOkay(prompt_string, color, scale)
     lsPrint(10, 10, 0, 0.7, 0.7, 0xB0B0B0ff,
 	    "Hold Ctrl+Shift to end this script.");
     lsPrint(10, 24, 0, 0.7, 0.7, 0xB0B0B0ff,
-	    "Hold Alt+Shift to choose Okay.");
+	    "Hold Alt+Shift to pause this script.");
     lsPrintWrapped(10, 60, 0, lsScreenX - 20, scale, scale, color, prompt_string);
    
-    if lsButtonText(120, 200, z, 100, 0xFFFFFFff, "OK") or
+    if lsButtonText(100, 200, z, 100, 0xFFFFFFff, "OK") or
       (lsAltHeld() and lsShiftHeld()) then
       is_done = 1;
       ret = 1;
     end
     
-    if lsButtonText(120, 230, z, 100, 0xFFFFFFff, "Cancel") then
-      is_done = 1;
-      ret = nil;
+    if not no_cancel then
+      if lsButtonText(100, 230, z, 100, 0xFFFFFFff, "Cancel") then
+        is_done = 1;
+        ret = nil;
+      end
     end
-    
+
     lsDoFrame();
     lsSleep(tick_delay);
   end
