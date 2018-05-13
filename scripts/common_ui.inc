@@ -428,3 +428,79 @@ function setCameraView(viewName)
       end
    end
 end
+
+-------------------------------------------------------------------------------
+-- ButtonText(x, y, z, w, color, text, xsc, ysc)
+--
+-- Allow scaling of lsButtonText()
+--
+-- x -- x coordinates to place button
+-- y -- y coordinates to place button
+-- z -- z affects if two or more objects are overlapping. The highest z will display instead of overlapping object with lower z.
+-- w -- width of button
+-- color (optional) -- color of message (defaults to white)
+-- text -- string giving the user a message
+-- xsc (optional) -- x scaling -- x and y should typically be same
+-- ysc (optional) -- y scaling -- x and y should typically be same
+-------------------------------------------------------------------------------
+
+function ButtonText(x, y, z, w, color, text, xsc, ysc)
+  if not text then
+    error("Incorrect number of arguments for ButtonText()");
+  end
+  if not color then
+	color = 0xFFFFFFff;
+  end
+  if not z then
+    z = 0;
+  end
+  if not xsc then
+    xsc = 0.8;
+  end
+  if not ysc then
+    ysc = 0.8;
+  end
+  lsSetCamera(0,0, lsScreenX/xsc, lsScreenY/ysc);
+	if lsButtonText(x/xsc, y/ysc, z, w, color, text) then
+	  return true;
+	end
+  lsSetCamera(0,0, lsScreenX, lsScreenY);
+end
+
+-------------------------------------------------------------------------------
+-- CheckBox(x, y, z, color, text, value, xsc, ysc)
+--
+-- Allow scaling of lsCheckBox()
+--
+-- x -- x coordinates to place button
+-- y -- y coordinates to place button
+-- z -- z affects if two or more objects are overlapping. The highest z will display instead of overlapping object with lower z.
+-- color (optional) -- color of message (defaults to white)
+-- text -- string giving the user a message
+-- value (optional) -- Current value of the check box (true/false)
+-- xsc (optional) -- x scaling -- x and y should typically be same
+-- ysc (optional) -- y scaling -- x and y should typically be same
+-------------------------------------------------------------------------------
+
+function CheckBox(x, y, z, color, text, value, xsc, ysc)
+  if not text then
+    error("Incorrect number of arguments for CheckBox()");
+  end
+  if not color then
+	color = 0xFFFFFFff;
+  end
+  if not z then
+    z = 0;
+  end
+  if not xsc then
+    xsc = 0.8;
+  end
+  if not ysc then
+    ysc = 0.8;
+  end
+  lsSetCamera(0,0, lsScreenX/xsc, lsScreenY/ysc);
+  	if lsCheckBox(x/xsc, y/ysc, z, color, text, value) then
+	  return true;
+	end
+  lsSetCamera(0,0, lsScreenX, lsScreenY);
+end
