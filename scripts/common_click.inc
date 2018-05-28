@@ -215,12 +215,12 @@ end
 
 function drawWater()
   local result = false;
-  sleepWithStatus(200, "Refilling water...");
   srReadScreen();
 
   -- First, check for rain barrel
   local rain = srFindImage("draw_water.png");
   if rain then
+    sleepWithStatus(200, "Refilling water...");
     safeClick(rain[0], rain[1]);
     local max = waitForImage("crem-max.png", 3000, "Waiting for Max button");
     if max then
@@ -236,6 +236,7 @@ function drawWater()
       aqueduct = srFindImage("Aqueduct2.png");
     end
     if aqueduct then
+    sleepWithStatus(200, "Refilling water...");
       safeClick(aqueduct[0], aqueduct[1]);
       sleepWithStatus(200, "Refreshing aqueduct...");
       srReadScreen();
@@ -253,6 +254,7 @@ function drawWater()
     local watersmall = srFindImage("iconWaterJugSmallIcon.png", 1);
 
     if (water or watersmall) then
+    sleepWithStatus(200, "Refilling water...");
 	if water then
         safeClick(water[0]+3, water[1]-5);
 	else
