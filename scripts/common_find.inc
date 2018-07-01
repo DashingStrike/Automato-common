@@ -360,7 +360,7 @@ function ocrNumber(startX, startY, characterSet)
       result = result * 10 + digit;
       x = x + sizeX + 1;
     else
-      result = result + digit/math.pow(10, afterDecimal);
+      result = result + digit/10^ afterDecimal;
       afterDecimal = afterDecimal + 1;
       x = x + sizeX + 1;
     end
