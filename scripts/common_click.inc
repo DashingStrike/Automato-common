@@ -206,14 +206,16 @@ function clickAllText(text, offsetX, offsetY, rightClick)
 end
 
 -------------------------------------------------------------------------------
--- drawWater()
+-- drawWater(skipTimer)
 --
 -- Attempts to draw water from an aqueduct, rain barrel, or pond.
 --
+-- Use drawWater(1) to avoid the 3500 sleepWithStatus message 'Waiting for water pickup animation...'
+-- Use drawWater() to wait for animation to finish, before continuing 
 -- Returns true on success
 -------------------------------------------------------------------------------
 
-function drawWater()
+function drawWater(skipTimer)
   local result = false;
   srReadScreen();
 
@@ -263,7 +265,9 @@ function drawWater()
       local max = waitForImage("crem-max.png", 500, "Waiting for Max button", nil, 3000);
       if max then
         safeClick(max[0]+5, max[1]+5);
+      if not skipTimer then
         sleepWithStatus(3500, "Waiting for water pickup animation...");
+      end
         result = true;
       end
     end
