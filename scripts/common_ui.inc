@@ -462,9 +462,9 @@ function ButtonText(x, y, z, w, color, text, xsc, ysc)
   end
   lsSetCamera(0,0, lsScreenX/xsc, lsScreenY/ysc);
 	if lsButtonText(x/xsc, y/ysc, z, w, color, text) then
-	  lsSetCamera(0,0, lsScreenX, lsScreenY);
 	  return true;
 	end
+  lsSetCamera(0,0, lsScreenX, lsScreenY);
 end
 
 -------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ function CheckBox(x, y, z, color, text, value, xsc, ysc)
   end
   lsSetCamera(0,0, lsScreenX/xsc, lsScreenY/ysc);
   	if lsCheckBox(x/xsc, y/ysc, z, color, text, value) then
-          lsSetCamera(0,0, lsScreenX, lsScreenY);
 	  return true;
 	end
+  lsSetCamera(0,0, lsScreenX, lsScreenY);
 end
