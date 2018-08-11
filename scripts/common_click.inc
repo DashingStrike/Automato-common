@@ -276,7 +276,7 @@ function drawWater(skipTimer)
 end
 
 ------------------------------------------------------------------------------
--- clickText(parse, safe)
+-- clickText(parse, safe, offsetX, offsetY)
 --
 -- convenient wrapper to click on text 20, 7 pixels in from where the top
 -- left of the parse object
@@ -285,12 +285,18 @@ end
 -- always returns nil
 ------------------------------------------------------------------------------
 
-function clickText(parse, safe)
+function clickText(parse, safe, offsetX, offsetY)
+  if not offsetX then
+    offsetX = 20;
+  end
+  if not offsetY then
+    offsetY = 7;
+  end
   if parse then
     if safe and safe ~= false then
-      safeClick(parse[0] + 20, parse[1] + 7, 0);
+      safeClick(parse[0] + offsetX, parse[1] + offsetY, 0);
     else
-      srClickMouseNoMove(parse[0] + 20, parse[1] + 7);
+      srClickMouseNoMove(parse[0] + offsetX, parse[1] + offsetY);
       lsSleep(per_click_delay);
     end
   end
