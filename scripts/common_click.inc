@@ -316,7 +316,7 @@ end
 -- Returns true on success
 -------------------------------------------------------------------------------
 
-warehouse_color = -1769769985;
+warehouse_color = 1412899327;
 chest_color = 2036219647;
 tent_color = 1399546879;
 
