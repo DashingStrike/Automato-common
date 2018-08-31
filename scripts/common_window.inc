@@ -401,12 +401,21 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
       y = y + 30;
     end
 
-    if lsButtonText(30, y, 0, 250, 0x80D080ff, "Stash Windows") then
+    if lsButtonText(30, y, 0, 250, 0x80D080ff, "Stash Windows (Right)") then
       lsDoFrame();
       if pauseForFocus then
 	askForWindow(focusMessage);
       end
       stashAllWindows(BOTTOM_RIGHT);
+    end
+    y = y + 30;
+
+    if lsButtonText(30, y, 0, 250, 0x80D080ff, "Stash Windows (Left)") then
+      lsDoFrame();
+      if pauseForFocus then
+	askForWindow(focusMessage);
+      end
+      stashAllWindows(BOTTOM_LEFT);
     end
     y = y + 30;
 
