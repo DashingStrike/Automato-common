@@ -379,14 +379,14 @@ function findDigit(x, y, sizeX, sizeY, prefix)
   local result = nil;
   for i=0, 9 do
     if srFindImageInRange(prefix .. i .. ".png", x, y,
-        sizeX, sizeY, tol)
+        sizeX, sizeY, 5000)
     then
       result = i;
       break;
     end
     if prefix == "ocr/" then
       if srFindImageInRange(prefix .. "decimals.png", x, y,
-        sizeX, sizeY, tol)
+        sizeX, sizeY, 5000)
       then
         result = ".";
         break;
