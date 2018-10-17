@@ -348,7 +348,7 @@ function closeEmptyRegions()
 end
 
 -------------------------------------------------------------------------------
--- windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
+-- windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight, default_focus, default_waterGap)
 --
 -- Run a window manager interface to let the user open, pin, arrange,
 -- or clear windows.
@@ -361,12 +361,14 @@ end
 -- sizeRight (optional) -- amount of space to right of screen, defaults to automato width
 -- offsetWidth (optional) -- adds an additional width offset
 -- offsetHeight (optional) -- adds an additional height offset
+-- default_focus (optional) -- bool: force 'Pause for Focus' box to be checked
+-- default_waterGap (optional) -- bool: force 'Leave Gap for Water' box to be checked
 
 -------------------------------------------------------------------------------
 
 pauseForFocus = false;
 
-function windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight)
+function windowManager(title, message, allowCascade, allowWaterGap, varWidth, varHeight, sizeRight, offsetWidth, offsetHeight, default_focus, default_waterGap)
   if not title then
     title = "Window Manager";
   end
@@ -374,6 +376,15 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
     message = "Tap Ctrl to open and pin a window.\nTap Alt to open, pin and stash."
   end
   local waterGap = false;
+
+  if default_waterGap then
+    waterGap = true;
+  end
+
+  if default_focus then
+    pauseForFocus = true;
+  end
+
   local shift = false;
   local done = false;
   while not done do
@@ -434,8 +445,8 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
     if allowWaterGap then
       waterGap = lsCheckBox(30, y, 10, 0xffffffff, "Leave Gap for Water",
 			    waterGap);
-      y = y + 30;
     end
+      y = y + 30;
 
     lsPrintWrapped(10, y, 0, lsScreenY - 20, 0.7, 0.7, 0xd0d0d0ff,
 		   message);
