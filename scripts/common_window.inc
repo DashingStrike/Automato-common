@@ -439,11 +439,11 @@ function windowManager(title, message, allowCascade, allowWaterGap, varWidth, va
     end
     y = y + 40;
 
-    pauseForFocus = lsCheckBox(30, y, 10, 0xffffffff, "Pause for Focus",
+    pauseForFocus = CheckBox(30, y, 10, 0xffffffff, " Pause for Focus",
 			    pauseForFocus);
-    y = y + 30;
     if allowWaterGap then
-      waterGap = lsCheckBox(30, y, 10, 0xffffffff, "Leave Gap for Water",
+      y = y + 20;
+      waterGap = CheckBox(30, y, 10, 0xffffffff, " Leave Gap for Water",
 			    waterGap);
     end
       y = y + 30;
@@ -503,7 +503,7 @@ function unpinManager(title, message)
     message = "";
   end
   while lsShiftHeld() and lsControlHeld() do
-    lsPrintWrapped(10, 60, 0, lsScreenX - 20, 1, 1, 0x808080ff,
+    lsPrintWrapped(10, 80, 0, lsScreenX - 20, 0.8, 0.8, 0x808080ff,
 		  "Please release Ctrl+Shift");
     lsSleep(tick_delay);
     lsDoFrame();
