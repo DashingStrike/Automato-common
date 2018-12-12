@@ -270,7 +270,7 @@ function arrangeStashed(cascade, waterGap, varWidth, varHeight, sizeRight, offse
     safeDrag(window[0], window[1], lastX, lastY);
     if cascade then
       currentX = currentX + 8;
-      currentY = currentY + 24;
+      currentY = currentY + 25;
     else
       currentX = currentX + width + 5;
     end
