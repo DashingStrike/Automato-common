@@ -1,4 +1,19 @@
 -----------------------------------------------------------
+-- checkLegacyClock()
+--
+-- If Legacy Clock is found (Small Interface), then show error to user.
+----------------------------------------------------------
+function checkLegacyClock()
+  srReadScreen();
+  local LegacyClockSmall = srFindImage("noLegacyClock_small.png");
+    if LegacyClockSmall then
+	while 1 do
+        sleepWithStatus(999,"You are not using Legacy Clock!\n\nClick Self, Options, Interface-Options and check Use Legacy Interface (Under Action Icons:)\n\nClick End Script and set your clock, retry",nil,0.7,0.7);
+	end
+    end
+end
+
+-----------------------------------------------------------
 -- findCoords()
 --
 -- returns a Point object containing the current x and y
@@ -6,6 +21,7 @@
 -- misnamed and is oddly significantly slower.
 ----------------------------------------------------------
 function findCoords()
+  checkLegacyClock();
   local result = nil;
   local anchor = findText("Year");
 
